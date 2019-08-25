@@ -1,0 +1,1 @@
+Hello TAs, Excel is having a difficulty processing my Else statement, Julia has gone over my initial code and said that it runs correctly on hers. In the mean time I tried to circumvent the issue by using font over interior.colorindex but that didn't resolve the issue on my machine.

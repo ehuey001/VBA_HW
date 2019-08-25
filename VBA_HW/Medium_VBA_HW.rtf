@@ -1,0 +1,102 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf600
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 ' medium start\
+' create a script that will loop thru all stocks for one year for each run and take the following:\
+' ticker symbol\
+' yearly change from opening price at beginning of given year to the closing price at the end of that year\
+' % change from opening price at the beginnning of a given year to the closing price at the end of that year\
+' the total stock volume of the stock\
+' have conditional formatting that will highlight positive change in green and neg in red\
+Sub Medium()\
+\
+    ' for each worksheet\
+    ' Dim w As Long\
+    Dim ws As Worksheet\
+    For Each ws In Worksheets\
+    ws.Activate\
+    \
+        Range("I1").Value = "Ticker"\
+        Range("J1").Value = "Yearly Change"\
+        Range("K1").Value = "Percent Change"\
+        Range("L1").Value = "Total Stock Volume"\
+ \
+    ' aggregate all of the same ticker and show in Column I\
+        Dim Ticker_Name As String\
+        Dim Ticker_Total As Double\
+        Dim Perc_Change As Double\
+        Dim Open_Price As Double\
+        Dim Close_Price As Double\
+    ' Dim TSV As LongLong\
+        Dim Row_Var As Long\
+        Dim Num_Rows As Long\
+        Dim Num_Columns As Long\
+        Dim Yearly_Change As Double\
+    \
+    ' initializations\
+        Row_Var = 2\
+        Ticker_Total = 0\
+        Open_Price = Range("C" & Row_Var).Value\
+        Close_Price = 0\
+        Num_Rows = Cells(Rows.Count, 1).End(xlUp).Row\
+        Num_Columns = Cells(1, Columns.Count).End(xlToLeft).Column\
+    \
+    ' MsgBox (Str(Num_Rows) & " Rows")\
+    ' MsgBox (Str(Num_Columns) & " Columns")\
+    \
+        For i = 2 To Num_Rows\
+    \
+            If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then\
+        \
+            ' take the values for the last summation/comparison\
+                Ticker_Name = Cells(i, 1).Value\
+                Close_Price = Range("F" & i).Value\
+                Ticker_Total = Ticker_Total + Range("G" & i).Value\
+            \
+            ' print out the values for summation/changes\
+                Range("I" & Row_Var).Value = Ticker_Name\
+                Range("J" & Row_Var).Value = Close_Price - Open_Price\
+                \
+                If Open_Price <> 0 Then\
+                    Range("K" & Row_Var).Value = ((Close_Price - Open_Price) / Open_Price)\
+            \
+            ' formatting for 0.00%\
+                \
+       		Range("K" & Row_Var).NumberFormat = "0.00%"\
+                Else\
+                    Range("K" & Row_Var).Value = "0"\
+                End If\
+            \
+                Range("L" & Row_Var).Value = Ticker_Total\
+            \
+            ' time to move onto the next one, reset\
+                Ticker_Total = 0\
+                Row_Var = Row_Var + 1\
+            ' take new open price\
+                Open_Price = Range("C" & i + 1).Value\
+            \
+            Else\
+                Ticker_Total = Ticker_Total + Range("G" & i).Value\
+            \
+            End If\
+        \
+            ' to TAs, Julia and I opted to use Font color instead of Interior due to an inability of my machine, switching it to Interior works on hers though. Please try it\
+            If Range("J" & Row_Var).Value >= 0 Then\
+                Range("J" & Row_Var).Font.ColorIndex = 4\
+            \
+            ' to TAs, Julia and I opted to use Font color instead of Interior due to an inability of my machine, switching it to Interior works on hers though. Please try it\
+            Else\
+                Range("J" & Row_Var).Font.ColorIndex = 3\
+                \
+            End If\
+        \
+        Next i\
+    \
+    Next ws\
+\
+End Sub\
+}
